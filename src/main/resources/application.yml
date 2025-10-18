@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: lunch-selector
+
+server:
+  port: ${PORT:8080}
+
+line:
+  bot:
+    channel-token: ${LINE_CHANNEL_TOKEN}
+    channel-secret: ${LINE_CHANNEL_SECRET}
+    handler:
+      path: /callback
+
+lunch:
+  user-ids:
+    - ${LINE_USER_ID_1:U1234567890abcdefghijklmnopqrstuv}
+
+logging:
+  level:
+    com.lunch: INFO
+    root: INFO
