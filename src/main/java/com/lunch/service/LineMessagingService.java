@@ -3,6 +3,8 @@ package com.lunch.service;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.response.BotApiResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +28,7 @@ public class LineMessagingService {
         
         for (String userId : userIds) {
             try {
-                CompletableFuture<Void> future = lineMessagingClient.pushMessage(
+                CompletableFuture<BotApiResponse> future = lineMessagingClient.pushMessage(
                     new PushMessage(userId, textMessage)
                 );
                 future.get();

@@ -9,12 +9,9 @@ line:
   bot:
     channel-token: ${LINE_CHANNEL_TOKEN}
     channel-secret: ${LINE_CHANNEL_SECRET}
-    handler:
-      path: /callback
 
 lunch:
-  user-ids:
-    - ${LINE_USER_ID_1:U1234567890abcdefghijklmnopqrstuv}
+  user-ids: ${LINE_USER_ID_1:}
 
 logging:
   level:
