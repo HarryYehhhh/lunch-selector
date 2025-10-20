@@ -32,8 +32,11 @@ public class WebhookController {
         log.info("Received webhook request");
 
         try {
-            // Validate signature (skip for now to make it work)
-            // In production, you should validate the signature
+            // Validate signature to ensure request is from LINE
+            if (signature != null && !validateSignature(payload, signature)) {
+                log.warn("⚠️ Invalid signature - possible unauthorized request");
+                return ResponseEntity.status(401).body("Invalid signature");
+            }
 
             // Parse the payload
             JsonNode root = objectMapper.readTree(payload);
