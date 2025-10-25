@@ -4,8 +4,9 @@
 set -e
 
 # ===== 設定區 (請修改這裡) =====
-PROJECT_ID="your-gcp-project-id"
+PROJECT_ID="mercurial-snow-452117-k6"
 REGION="asia-east1"
+REPOSITORY_NAME="lunch-selector-repo"
 SERVICE_NAME="lunch-selector"
 # ================================
 
@@ -39,14 +40,34 @@ fi
 echo "📋 設定 GCP 專案: $PROJECT_ID"
 gcloud config set project $PROJECT_ID
 
-# 建構並推送映像檔
-echo "📦 建構 Docker 映像檔..."
-gcloud builds submit --tag gcr.io/$PROJECT_ID/$SERVICE_NAME
+# 檢查並建立 Artifact Registry repository
+echo "🔍 檢查 Artifact Registry repository..."
+if ! gcloud artifacts repositories describe $REPOSITORY_NAME \
+  --location=$REGION \
+  --project=$PROJECT_ID &>/dev/null; then
+    echo "📦 建立 Artifact Registry repository: $REPOSITORY_NAME"
+    gcloud artifacts repositories create $REPOSITORY_NAME \
+      --repository-format=docker \
+      --location=$REGION \
+      --description="Lunch Selector Docker images" \
+      --project=$PROJECT_ID
+    echo "✅ Repository 建立完成"
+else
+    echo "✅ Repository 已存在"
+fi
+
+# 設定映像檔完整路徑
+IMAGE_PATH="$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/$SERVICE_NAME"
+
+# 建構並推送映像檔到 Artifact Registry
+echo "📦 建構 Docker 映像檔並推送到 Artifact Registry..."
+echo "   映像位置: $IMAGE_PATH"
+gcloud builds submit --tag $IMAGE_PATH
 
 # 部署到 Cloud Run
 echo "☁️  部署到 Cloud Run..."
 gcloud run deploy $SERVICE_NAME \
-  --image gcr.io/$PROJECT_ID/$SERVICE_NAME \
+  --image $IMAGE_PATH \
   --platform managed \
   --region $REGION \
   --allow-unauthenticated \
@@ -64,20 +85,32 @@ SERVICE_URL=$(gcloud run services describe $SERVICE_NAME \
 echo ""
 echo "✅ 部署完成！"
 echo ""
-echo "📍 服務 URL: $SERVICE_URL"
+echo "📍 服務資訊："
+echo "  URL: $SERVICE_URL"
+echo "  映像: $IMAGE_PATH"
+echo "  區域: $REGION"
 echo ""
 echo "🧪 測試指令："
 echo "  curl $SERVICE_URL/api/health"
 echo "  curl $SERVICE_URL/api/lunch/manual"
 echo "  curl -X POST $SERVICE_URL/api/lunch/notify"
 echo ""
-echo "⏰ 下一步：設定 Cloud Scheduler"
-echo "  執行以下指令設定平日 11:30 自動推播："
+echo "⏰ 定時任務說明："
+echo "  ✅ 應用程式已內建定時任務功能"
+echo "  📅 每個平日 11:50 自動發送午餐推薦"
+echo "  🔧 位置: src/main/java/com/lunch/scheduler/LunchScheduler.java"
 echo ""
-echo "  gcloud scheduler jobs create http lunch-daily-notify \\"
-echo "    --location=$REGION \\"
-echo "    --schedule=\"30 11 * * 1-5\" \\"
-echo "    --time-zone=\"Asia/Taipei\" \\"
-echo "    --uri=\"$SERVICE_URL/api/lunch/notify\" \\"
-echo "    --http-method=POST"
+echo "💡 提示："
+echo "  - 使用 Artifact Registry 儲存映像檔（推薦方式）"
+echo "  - Cloud Run 會自動保持服務運行來執行定時任務"
+echo "  - 如需修改時間，請編輯 LunchScheduler.java 中的 cron 表達式"
+echo ""
+echo "🔗 更新 LINE Webhook URL:"
+echo "  前往 LINE Developers Console 設定 Webhook URL:"
+echo "  $SERVICE_URL/callback"
+echo ""
+echo "📦 Artifact Registry 資訊："
+echo "  Repository: $REPOSITORY_NAME"
+echo "  Location: $REGION"
+echo "  查看映像: gcloud artifacts docker images list $REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME"
 echo ""

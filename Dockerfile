@@ -5,8 +5,8 @@ COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# 第二階段：執行
-FROM eclipse-temurin:17-jre-alpine
+# 第二階段：執行（使用 Debian-based Temurin）
+FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 COPY --from=build /app/target/lunch-selector-1.0.0.jar app.jar
 EXPOSE 8080
