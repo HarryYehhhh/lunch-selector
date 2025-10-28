@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(curl:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(mvn clean compile:*)",
+      "Bash(export GCP_PROJECT_ID=\"mercurial-snow-452117-k6\")",
+      "Bash(mvn compile exec:java:*)",
+      "Bash(python3:*)"
     ],
     "deny": [],
     "ask": []

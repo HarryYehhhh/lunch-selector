@@ -19,7 +19,7 @@ public class LunchScheduler {
     private final LineMessagingService lineMessagingService;
 
     /**
-     * 每個平日 11:50 自動發送午餐推薦
+     * 每個平日 11:50 自動發送個性化午餐推薦
      * Cron 表達式: "秒 分 時 日 月 星期"
      * 0 50 11 * * MON-FRI = 週一到週五的 11:50:00
      */
@@ -31,14 +31,10 @@ public class LunchScheduler {
         log.info("⏰ 定時任務觸發: {}", currentTime);
 
         try {
-            String restaurant = lunchService.selectRandomRestaurant();
-            String message = lunchService.formatLunchMessage(restaurant);
+            // 發送個性化推薦給每個啟用通知的用戶
+            lineMessagingService.sendPersonalizedLunchNotifications();
 
-            log.info("📋 今日午餐選擇: {}", restaurant);
-
-            lineMessagingService.sendLunchNotification(message);
-
-            log.info("✅ 定時午餐通知發送成功");
+            log.info("✅ 定時個性化午餐通知發送成功");
 
         } catch (Exception e) {
             log.error("❌ 定時午餐通知發送失敗", e);

@@ -10,10 +10,19 @@ line:
     channel-token: ${LINE_CHANNEL_TOKEN}
     channel-secret: ${LINE_CHANNEL_SECRET}
 
+# GCP 和 Firestore 配置
+gcp:
+  project-id: ${GCP_PROJECT_ID:}
+  credentials-path: ${GOOGLE_APPLICATION_CREDENTIALS:}
+
+# 舊版配置（已廢棄，保留向後兼容）
 lunch:
   user-ids: ${LINE_USER_ID_1:}
+  users:
+    storage-path: users.json
 
 logging:
   level:
     com.lunch: INFO
+    com.google.cloud: WARN
     root: INFO
