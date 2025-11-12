@@ -1,0 +1,43 @@
+# ============================================
+# 優化版 Dockerfile - 更可靠的緩存策略
+# ============================================
+
+# 第一階段：建構
+FROM maven:3.9-eclipse-temurin-17 AS build
+WORKDIR /app
+
+# 策略 1: 先複製依賴文件，單獨下載依賴（這層緩存很穩定）
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# 策略 2: 再複製源碼（源碼變更不會影響依賴層）
+COPY src ./src
+
+# 策略 3: 使用明確的構建參數，避免依賴緩存
+# -U: 強制更新快照依賴
+# -B: 批次模式，避免互動式提示
+# -DskipTests: 跳過測試加速構建
+RUN mvn clean package -U -B -DskipTests
+
+# 策略 4: 驗證 JAR 文件內容（確保 scheduler 存在）
+RUN jar -tf target/lunch-selector-1.0.0.jar | grep -q "com/lunch/scheduler/LunchScheduler.class" \
+    || (echo "❌ ERROR: LunchScheduler not found in JAR!" && exit 1)
+
+# 第二階段：執行
+FROM eclipse-temurin:17-jre-jammy
+
+# 添加構建信息（便於追蹤問題）
+ARG BUILD_DATE
+ARG GIT_COMMIT
+LABEL build_date="${BUILD_DATE}"
+LABEL git_commit="${GIT_COMMIT}"
+
+WORKDIR /app
+COPY --from=build /app/target/lunch-selector-1.0.0.jar app.jar
+
+# 健康檢查
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s \
+  CMD curl -f http://localhost:8080/api/health || exit 1
+
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]

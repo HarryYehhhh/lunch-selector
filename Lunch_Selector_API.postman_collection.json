@@ -1,0 +1,279 @@
+{
+  "info": {
+    "name": "Lunch Selector API",
+    "description": "餐廳管理 API 測試集合",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "TEST_USER_001",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. CREATE - 新增餐廳",
+      "item": [
+        {
+          "name": "新增麥當勞",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"麥當勞\",\n  \"category\": \"速食\",\n  \"tags\": [\"快速\", \"便宜\"],\n  \"rating\": 4,\n  \"notes\": \"薯條很好吃\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/restaurants",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "restaurants"]
+            }
+          }
+        },
+        {
+          "name": "新增鼎泰豐",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"鼎泰豐\",\n  \"category\": \"中式\",\n  \"tags\": [\"好吃\", \"貴\"],\n  \"rating\": 5,\n  \"notes\": \"小籠包超讚\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/restaurants",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "restaurants"]
+            }
+          }
+        },
+        {
+          "name": "新增星巴克",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"星巴克\",\n  \"category\": \"咖啡\",\n  \"tags\": [\"快速\", \"中等價位\"],\n  \"rating\": 4\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/restaurants",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "restaurants"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. READ - 查詢餐廳",
+      "item": [
+        {
+          "name": "取得所有餐廳",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/restaurants",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "restaurants"]
+            }
+          }
+        },
+        {
+          "name": "按分類篩選 - 速食",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/restaurants?category=速食",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "restaurants"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "速食"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "按標籤篩選 - 快速",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/restaurants?tags=快速",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "restaurants"],
+              "query": [
+                {
+                  "key": "tags",
+                  "value": "快速"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "取得單一餐廳",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/restaurants/{{restaurant_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "restaurants", "{{restaurant_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. UPDATE - 更新餐廳",
+      "item": [
+        {
+          "name": "更新評分和備註",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"notes\": \"薯條超讚！升級評分\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/restaurants/{{restaurant_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "restaurants", "{{restaurant_id}}"]
+            }
+          }
+        },
+        {
+          "name": "只更新標籤",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tags\": [\"快速\", \"中等價位\", \"WiFi\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/restaurants/{{restaurant_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "restaurants", "{{restaurant_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. DELETE - 刪除餐廳",
+      "item": [
+        {
+          "name": "刪除餐廳",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/restaurants/{{restaurant_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "restaurants", "{{restaurant_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. 隨機推薦",
+      "item": [
+        {
+          "name": "無限制隨機推薦",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/restaurants/random",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "restaurants", "random"]
+            }
+          }
+        },
+        {
+          "name": "指定分類的隨機推薦",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/restaurants/random?category=中式",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "restaurants", "random"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "中式"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "排除最近造訪的推薦",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/restaurants/random?excludeRecent=true",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "restaurants", "random"],
+              "query": [
+                {
+                  "key": "excludeRecent",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. 記錄造訪",
+      "item": [
+        {
+          "name": "記錄餐廳造訪",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/restaurants/{{restaurant_id}}/visit",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "restaurants", "{{restaurant_id}}", "visit"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

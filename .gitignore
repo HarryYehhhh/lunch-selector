@@ -10,8 +10,10 @@ mvnw.cmd
 .vscode/
 .eclipse/
 .settings/
+.claude/
 .classpath
 .project
+
 
 # OS
 .DS_Store

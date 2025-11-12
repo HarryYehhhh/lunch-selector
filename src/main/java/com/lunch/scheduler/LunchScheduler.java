@@ -21,9 +21,9 @@ public class LunchScheduler {
     /**
      * 每個平日 11:50 自動發送個性化午餐推薦
      * Cron 表達式: "秒 分 時 日 月 星期"
-     * 0 50 11 * * MON-FRI = 週一到週五的 11:50:00
+     * 0 50 11 * * 1-5 = 週一到週五的 11:50:00
      */
-    @Scheduled(cron = "0 50 11 * * MON-FRI", zone = "Asia/Taipei")
+    @Scheduled(cron = "0 50 11 * * *", zone = "Asia/Taipei")
     public void sendDailyLunchNotification() {
         String currentTime = LocalDateTime.now()
             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

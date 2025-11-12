@@ -1,0 +1,56 @@
+# ============================================
+# .dockerignore - 避免不必要的文件影響緩存
+# ============================================
+
+# Git 相關
+.git
+.gitignore
+.gitattributes
+
+# IDE 相關（這些文件變更不應該觸發重新構建）
+.idea
+.vscode
+*.iml
+*.swp
+*.swo
+*~
+
+# 構建產物（避免複製本地 target）
+target/
+*.jar
+*.war
+
+# 測試相關
+*.log
+logs/
+
+# 環境變數和密鑰（避免意外複製）
+.env
+.env.local
+.env.*.local
+*.key
+*.json
+firestore-key.json
+
+# Docker 相關
+Dockerfile*
+.dockerignore
+docker-compose*.yml
+
+# 文檔和範例
+README.md
+*.md
+docs/
+.github/
+
+# 臨時文件
+tmp/
+temp/
+*.tmp
+
+# macOS
+.DS_Store
+
+# Node.js（如果有前端）
+node_modules/
+npm-debug.log
